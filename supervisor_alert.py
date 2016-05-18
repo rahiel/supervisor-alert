@@ -21,7 +21,7 @@ from subprocess import check_call, CalledProcessError
 
 from supervisor.childutils import listener, get_headers
 
-__version__ = "0.2"
+__version__ = "0.2.1"
 
 
 def main():

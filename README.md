@@ -1,5 +1,7 @@
 # supervisor-alert
 
+[![License](https://img.shields.io/pypi/l/supervisor-alert.svg)](https://github.com/rahiel/supervisor-alert/blob/master/LICENSE.txt)
+
 Are you using [Supervisor](http://supervisord.org) to manage processes on a
 server? With supervisor-alert you can receive messages when the state of your
 processes change. Be the first to know when your services die!
@@ -49,10 +51,8 @@ sudo supervisorctl reread
 sudo supervisorctl update
 ```
 
-Test if it's working by restarting one of your services:
-``` shell
-sudo supervisorctl restart <process_name>
-```
+You should now receive your first alert, notifying you that `supervisor_alert`
+has started running.
 
 [ntfy]: https://github.com/dschep/ntfy
 [events]: http://supervisord.org/events.html#event-types
