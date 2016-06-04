@@ -18,7 +18,16 @@ Install supervisor-alert on your system:
 sudo pip install supervisor-alert
 ```
 
-Then create the file `/etc/supervisor/conf.d/supervisor_alert.conf` as root:
+Then run:
+``` shell
+sudo supervisor-alert --configure
+```
+for the default configuration. This will send notifications over Telegram. Read
+the next section to customize or if you dislike automatic configurations.
+
+# Manual Configuration
+
+Create the file `/etc/supervisor/conf.d/supervisor_alert.conf` as root:
 ``` shell
 [eventlistener:supervisor_alert]
 command=supervisor-alert --telegram

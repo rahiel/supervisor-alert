@@ -15,13 +15,15 @@
 # limitations under the License.
 import argparse
 from functools import partial
+import os
 from os.path import expanduser
+from pwd import getpwnam
 import shlex
 from subprocess import check_call, CalledProcessError
 
 from supervisor.childutils import listener, get_headers
 
-__version__ = "0.2.1"
+__version__ = "0.3"
 
 
 def main():
@@ -29,8 +31,12 @@ def main():
                                      epilog="Homepage: https://github.com/rahiel/supervisor-alert")
     parser.add_argument("-c", "--command", help="Specify the command to process the event messages.")
     parser.add_argument("--telegram", help="Use telegram-send to send event messages.", action="store_true")
+    parser.add_argument("--configure", help="configure %(prog)s", action="store_true")
     parser.add_argument("--version", action="version", version="%(prog)s {}".format(__version__))
     args = parser.parse_args()
+
+    if args.configure:
+        return configure()
 
     s = "PROCESS_STATE_"
 
@@ -78,8 +84,37 @@ def send(command, message):
 
 
 def configure():
-    """Guide user to set up supervisor-alert."""
-    pass
+    """Automatically set up supervisor-alert."""
+    conf = "/etc/supervisor/conf.d/supervisor_alert.conf"
+
+    config = """[eventlistener:supervisor_alert]
+command=supervisor-alert --telegram
+events=PROCESS_STATE_RUNNING,PROCESS_STATE_EXITED,PROCESS_STATE_FATAL
+autostart=true
+autorestart=true
+user=supervisor_alert
+"""
+
+    try:
+        with open(conf, 'w') as f:
+            f.write(config)
+    except IOError:
+        raise Exception("Can't save config, please execute as root: sudo supervisor-alert --configure")
+
+    try:
+        try:
+            getpwnam("supervisor_alert")
+        except KeyError:
+            check_call("adduser supervisor_alert --system --no-create-home".split())
+
+        # restart supervisor
+        check_call("supervisorctl reread".split())
+        check_call("supervisorctl update".split())
+    except CalledProcessError:
+        raise Exception("Please retry as root or configure manually: "
+                        "https://github.com/rahiel/supervisor-alert#manual-configuration")
+
+    print("Supervisor-alert has been set up successfully!")
 
 
 if __name__ == "__main__":
