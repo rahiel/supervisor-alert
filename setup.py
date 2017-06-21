@@ -17,7 +17,7 @@ except:
 setup(
     name="supervisor-alert",
     version=__version__,
-    description="Receive notifications for supervisor process events",
+    description="Receive notifications for Supervisor process events.",
     long_description=long_description,
     url="https://github.com/rahiel/supervisor-alert",
     license="Apache-2.0",

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# supervisor-alert - Receive notifications for supervisor process events
-# Copyright 2016 Rahiel Kasim
+# supervisor-alert - Receive notifications for Supervisor process events
+# Copyright 2016-2017 Rahiel Kasim
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,17 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import argparse
+import shlex
 from functools import partial
-import os
 from os.path import expanduser
 from pwd import getpwnam
-import shlex
-from subprocess import check_call, CalledProcessError
+from subprocess import CalledProcessError, check_call
 
 from supervisor.childutils import listener, get_headers
 
-__version__ = "0.3"
+__version__ = "0.4"
 
+
+telegram_conf_args = ["--config", "/etc/telegram-send.conf"]
 
 def main():
     parser = argparse.ArgumentParser(description="Supervisor event listener to notify on process events.",
@@ -64,11 +65,11 @@ def main():
 def telegram(message):
     """Send message with telegram-send."""
     try:
-        check_call(["telegram-send", message])
+        check_call(["telegram-send", message] + telegram_conf_args)
         listener.ok()
     except OSError:     # command not found
         cmd = expanduser("~/.local/bin/telegram-send")
-        check_call([cmd, message])
+        check_call([cmd, message] + telegram_conf_args)
         listener.ok()
     except CalledProcessError:
         listener.fail()
@@ -96,7 +97,7 @@ user=supervisor_alert
 """
 
     try:
-        with open(conf, 'w') as f:
+        with open(conf, "w") as f:
             f.write(config)
     except IOError:
         raise Exception("Can't save config, please execute as root: sudo supervisor-alert --configure")
@@ -114,6 +115,8 @@ user=supervisor_alert
         raise Exception("Please retry as root or configure manually: "
                         "https://github.com/rahiel/supervisor-alert#manual-configuration")
 
+    print("Setting up telegram-send...")
+    check_call(["telegram-send", "--configure"] + telegram_conf_args)
     print("Supervisor-alert has been set up successfully!")
 
 

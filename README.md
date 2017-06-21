@@ -1,13 +1,16 @@
 # supervisor-alert
 
+[![Version](https://img.shields.io/pypi/v/supervisor-alert.svg)](https://pypi.python.org/pypi/supervisor-alert)
+[![pyversions](https://img.shields.io/pypi/pyversions/supervisor-alert.svg)](https://pypi.python.org/pypi/supervisor-alert)
 [![License](https://img.shields.io/pypi/l/supervisor-alert.svg)](https://github.com/rahiel/supervisor-alert/blob/master/LICENSE.txt)
 
 Are you using [Supervisor](http://supervisord.org) to manage processes on a
 server? With supervisor-alert you can receive messages when the state of your
 processes change. Be the first to know when your services die!
 
-To send messages on Telegram you need to install and set up [telegram-send][]
-first. You can also use any shell command to send the notifications.
+With the default configuration supervisor-alert sends messages over Telegram.
+For this to work you need to install [telegram-send][] system-wide first. You
+can also use any shell command to send the notifications.
 
 [telegram-send]: https://github.com/rahiel/telegram-send
 
