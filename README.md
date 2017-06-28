@@ -2,6 +2,7 @@
 
 [![Version](https://img.shields.io/pypi/v/supervisor-alert.svg)](https://pypi.python.org/pypi/supervisor-alert)
 [![pyversions](https://img.shields.io/pypi/pyversions/supervisor-alert.svg)](https://pypi.python.org/pypi/supervisor-alert)
+[![Downloads](https://www.cpu.re/static/supervisor-alert/downloads.svg)](https://www.cpu.re/static/supervisor-alert/downloads-by-python-version.txt)
 [![License](https://img.shields.io/pypi/l/supervisor-alert.svg)](https://github.com/rahiel/supervisor-alert/blob/master/LICENSE.txt)
 
 Are you using [Supervisor](http://supervisord.org) to manage processes on a
@@ -20,6 +21,10 @@ Install supervisor-alert on your system:
 ``` shell
 sudo pip install supervisor-alert
 ```
+You must install it with Python 2 because Supervisor doesn't support Python 3
+yet. For Supervisor 4+ you may have Python 3 support, if `python3 -c 'import
+supervisor'` doesn't give an error, you should install supervisor-alert with
+pip3/python3.
 
 Then run:
 ``` shell
