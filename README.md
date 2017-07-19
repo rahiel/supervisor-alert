@@ -51,6 +51,12 @@ example [ntfy][], pass in the command:
 command=supervisor-alert -c 'ntfy send'
 ```
 
+By default the config file at `/etc/telegram-send.conf` is used for
+telegram-send, to use a different config, or to pass any other options:
+``` shell
+command=supervisor-alert -c 'telegram-send --config /home/user/bunny.conf'
+```
+
 This configuration will run the event listener as the user `supervisor_alert`.
 It is a good practice to isolate services by running them as separate users (and
 avoiding running them as root). Add the user with:
