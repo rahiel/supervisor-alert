@@ -19,6 +19,7 @@ from functools import partial
 from os.path import expanduser
 from pwd import getpwnam
 from subprocess import CalledProcessError, check_call
+import socket
 
 from supervisor.childutils import listener, get_headers
 
@@ -64,6 +65,7 @@ def main():
 
 def telegram(message):
     """Send message with telegram-send."""
+    message = "%s)\n%s" % (socket.gethostname(), message) # Add hostname info before the message
     try:
         check_call(["telegram-send", message] + telegram_conf_args)
         listener.ok()
