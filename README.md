@@ -57,9 +57,15 @@ telegram-send, to use a different config, or to pass any other options:
 command=supervisor-alert -c 'telegram-send --config /home/user/bunny.conf'
 ```
 
-This configuration will run the event listener as the user `supervisor_alert`.
-It is a good practice to isolate services by running them as separate users (and
-avoiding running them as root). Add the user with:
+Optionally you can show the hostname before each message with the
+`--show-hostname` option:
+``` shell
+command=supervisor-alert --telegram --show-hostname
+```
+
+The default configuration will run the event listener as the user
+`supervisor_alert`. It is a good practice to isolate services by running them as
+separate users (and avoiding running them as root). Add the user with:
 ``` shell
 sudo adduser supervisor_alert --system --no-create-home
 ```

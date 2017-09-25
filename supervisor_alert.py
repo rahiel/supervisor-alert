@@ -18,15 +18,15 @@ import shlex
 from functools import partial
 from os.path import expanduser
 from pwd import getpwnam
+from socket import gethostname
 from subprocess import CalledProcessError, check_call
-import socket
 
 from supervisor.childutils import listener, get_headers
 
-__version__ = "0.4"
-
+__version__ = "0.5"
 
 telegram_conf_args = ["--config", "/etc/telegram-send.conf"]
+
 
 def main():
     parser = argparse.ArgumentParser(description="Supervisor event listener to notify on process events.",
@@ -34,6 +34,7 @@ def main():
     parser.add_argument("-c", "--command", help="Specify the command to process the event messages.")
     parser.add_argument("--telegram", help="Use telegram-send to send event messages.", action="store_true")
     parser.add_argument("--configure", help="configure %(prog)s", action="store_true")
+    parser.add_argument("--show-hostname", help="show hostname in messages", action="store_true")
     parser.add_argument("--version", action="version", version="%(prog)s {}".format(__version__))
     args = parser.parse_args()
 
@@ -41,6 +42,8 @@ def main():
         return configure()
 
     s = "PROCESS_STATE_"
+
+    hostname = gethostname()
 
     if args.telegram:
         alert = telegram
@@ -58,6 +61,8 @@ def main():
             data = get_headers(payload)  # keys: from_state, pid, processname
             process_name = data["processname"]
             message = process_name + " has entered state " + event_name
+            if args.show_hostname:
+                message = hostname + ": " + message
             alert(message)
         else:
             listener.ok()
@@ -65,7 +70,6 @@ def main():
 
 def telegram(message):
     """Send message with telegram-send."""
-    message = "%s)\n%s" % (socket.gethostname(), message) # Add hostname info before the message
     try:
         check_call(["telegram-send", message] + telegram_conf_args)
         listener.ok()
@@ -78,7 +82,7 @@ def telegram(message):
 
 
 def send(command, message):
-    "Send message with an arbitrary command."
+    """Send message with an arbitrary command."""
     try:
         check_call(command + [message])
         listener.ok()
@@ -91,12 +95,18 @@ def configure():
     conf = "/etc/supervisor/conf.d/supervisor_alert.conf"
 
     config = """[eventlistener:supervisor_alert]
-command=supervisor-alert --telegram
+command=supervisor-alert --telegram{}
 events=PROCESS_STATE_RUNNING,PROCESS_STATE_EXITED,PROCESS_STATE_FATAL
 autostart=true
 autorestart=true
 user=supervisor_alert
 """
+
+    show_hostname = raw_input("Prepend messages with the hostname? [y/n] ").strip().lower()
+    if show_hostname == "y":
+        config = config.format(" --show-hostname")
+    else:
+        config = config.format("")
 
     try:
         with open(conf, "w") as f:
