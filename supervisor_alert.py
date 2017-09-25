@@ -55,6 +55,7 @@ def main():
     while True:
         headers, payload = listener.wait()
         event_name = headers["eventname"]
+        event_name = event_name.strip()
 
         if event_name.startswith(s):
             event_name = event_name[len(s):].lower()
