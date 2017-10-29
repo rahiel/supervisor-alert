@@ -23,7 +23,7 @@ from subprocess import CalledProcessError, check_call
 
 from supervisor.childutils import listener, get_headers
 
-__version__ = "0.5"
+__version__ = "0.6"
 
 telegram_conf_args = ["--config", "/etc/telegram-send.conf"]
 
@@ -99,6 +99,7 @@ command=supervisor-alert --telegram{}
 events=PROCESS_STATE_RUNNING,PROCESS_STATE_EXITED,PROCESS_STATE_FATAL
 autostart=true
 autorestart=true
+stdout_logfile=NONE
 user=supervisor_alert
 """
 
