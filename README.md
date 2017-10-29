@@ -42,6 +42,7 @@ command=supervisor-alert --telegram
 events=PROCESS_STATE_RUNNING,PROCESS_STATE_EXITED,PROCESS_STATE_FATAL
 autostart=true
 autorestart=true
+stdout_logfile=NONE
 user=supervisor_alert
 ```
 
