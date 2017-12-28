@@ -48,7 +48,7 @@ def main():
     if args.telegram:
         alert = telegram
     elif args.command:
-        alert = partial(send, command=shlex.split(args.command))
+        alert = partial(send, shlex.split(args.command))
     else:
         raise Exception("No command specified.")
 
