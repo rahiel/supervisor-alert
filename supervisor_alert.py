@@ -23,7 +23,7 @@ from subprocess import CalledProcessError, check_call
 
 from supervisor.childutils import listener, get_headers
 
-__version__ = "0.6"
+__version__ = "0.6.2"
 
 telegram_conf_args = ["--config", "/etc/telegram-send.conf"]
 
@@ -63,7 +63,7 @@ def main():
             message = process_name + " has entered state " + event_name
             if args.show_hostname:
                 message = hostname + ": " + message
-            alert(message)
+            alert(message=message)
         else:
             listener.ok()
 
