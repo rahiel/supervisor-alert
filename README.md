@@ -1,7 +1,7 @@
 # supervisor-alert
 
-[![Version](https://img.shields.io/pypi/v/supervisor-alert.svg)](https://pypi.python.org/pypi/supervisor-alert)
-[![pyversions](https://img.shields.io/pypi/pyversions/supervisor-alert.svg)](https://pypi.python.org/pypi/supervisor-alert)
+[![Version](https://img.shields.io/pypi/v/supervisor-alert.svg)](https://pypi.org/project/supervisor-alert/)
+[![pyversions](https://img.shields.io/pypi/pyversions/supervisor-alert.svg)](https://pypi.org/project/supervisor-alert/)
 [![Downloads](https://www.cpu.re/static/supervisor-alert/downloads.svg)](https://www.cpu.re/static/supervisor-alert/downloads-by-python-version.txt)
 [![License](https://img.shields.io/pypi/l/supervisor-alert.svg)](https://github.com/rahiel/supervisor-alert/blob/master/LICENSE.txt)
 
