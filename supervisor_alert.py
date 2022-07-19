@@ -36,6 +36,7 @@ def main():
     parser.add_argument("--configure", help="configure %(prog)s", action="store_true")
     parser.add_argument("--show-hostname", help="show hostname in messages", action="store_true")
     parser.add_argument("--version", action="version", version="%(prog)s {}".format(__version__))
+    parser.add_argument("--exclude", help="Comma separated list of processes to exclude")
     args = parser.parse_args()
 
     if args.configure:
@@ -52,6 +53,11 @@ def main():
     else:
         raise Exception("No command specified.")
 
+    excluded = set()
+    if args.exclude:
+        for process in args.exclude.split(','):
+            excluded.add(process)
+
     while True:
         headers, payload = listener.wait()
         event_name = headers["eventname"]
@@ -63,7 +69,10 @@ def main():
             message = process_name + " has entered state " + event_name
             if args.show_hostname:
                 message = hostname + ": " + message
-            alert(message=message)
+            if process_name not in excluded:
+                alert(message=message)
+            else:
+                listener.ok()
         else:
             listener.ok()
 
