@@ -61,6 +61,7 @@ def main():
     while True:
         headers, payload = listener.wait()
         event_name = headers["eventname"]
+        success = True
 
         if event_name.startswith(s):
             event_name = event_name[len(s):].lower()
@@ -70,33 +71,34 @@ def main():
             if args.show_hostname:
                 message = hostname + ": " + message
             if process_name not in excluded:
-                alert(message=message)
-            else:
-                listener.ok()
-        else:
+                success = alert(message=message)
+
+        if success:
             listener.ok()
+        else:
+            listener.fail()
 
 
 def telegram(message):
     """Send message with telegram-send."""
     try:
         check_call(["telegram-send", message] + telegram_conf_args)
-        listener.ok()
+        return True
     except OSError:     # command not found
         cmd = expanduser("~/.local/bin/telegram-send")
         check_call([cmd, message] + telegram_conf_args)
-        listener.ok()
+        return True
     except CalledProcessError:
-        listener.fail()
+        return False
 
 
 def send(command, message):
     """Send message with an arbitrary command."""
     try:
         check_call(command + [message])
-        listener.ok()
+        return True
     except CalledProcessError:
-        listener.fail()
+        return False
 
 
 def configure():
